@@ -1,0 +1,50 @@
+---
+- name: "Create hackbox group"
+  group: "name=hackbox state=present"
+
+- name: "Create hackbox user"
+  user: "name=hackbox group=hackbox shell=/usr/bin/zsh"
+
+- name: "Add hackbox to sudoers"
+  lineinfile: "dest=/etc/sudoers state=present line='hackbox ALL=(ALL) NOPASSWD: ALL'"
+
+- name: "Copy root authorized_keys to hackbox user"
+  command: "cp -r /root/.ssh /home/hackbox/ creates=/home/hackbox/.ssh"
+
+- name: "Check permissions for hackbox ssh"
+  file: "path=/home/hackbox/.ssh state=directory recurse=yes owner=hackbox group=hackbox"
+
+- name: "Create apps directory"
+  file: "path=/home/hackbox/apps state=directory owner=hackbox group=hackbox"
+
+- name: "Clone dotfiles"
+  git: "repo=https://github.com/jswinarton/dotfiles.git
+       dest=/home/hackbox/apps/dotfiles
+       update=no"
+  become: "yes"
+  become_user: "hackbox"
+
+- name: "Symlink dotfiles"
+  command: "/home/hackbox/apps/dotfiles/setup/symlink_dotfiles.sh chdir=/home/hackbox/apps/dotfiles/setup creates=/home/hackbox/.commonrc"
+  become: "yes"
+  become_user: "hackbox"
+
+- name: "Clone oh-my-zsh"
+  git: "repo=https://github.com/robbyrussell/oh-my-zsh.git
+       dest=/home/hackbox/.oh-my-zsh
+       update=no"
+  become: "yes"
+  become_user: "hackbox"
+
+- name: "Clone vundle"
+  git: "repo=https://github.com/VundleVim/Vundle.vim.git
+       dest=/home/hackbox/.vim/bundle/Vundle.vim
+       update=no"
+  become: "yes"
+  become_user: "hackbox"
+
+- name: "Install vundle plugins"
+  command: "vim +PluginInstall +qall creates=/home/hackbox/.vim/bundle/ctrlp.vim"
+  become: "yes"
+  become_user: "hackbox"
+
