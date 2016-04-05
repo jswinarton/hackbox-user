@@ -10,6 +10,7 @@
   with_items:
       - "exuberant-ctags"
       - "silversearcher-ag"
+      - "ruby"
       - "vim"
       - "zsh"
 
