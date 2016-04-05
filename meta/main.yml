@@ -1,5 +1,5 @@
 galaxy_info:
-  author: Jeremy Swinarton
+  author: "Jeremy Swinarton"
   license: license (MIT)
   min_ansible_version: 2.0
   platforms:
