@@ -1,50 +1,69 @@
 ---
-- name: "Create hackbox group"
-  group: "name=hackbox state=present"
+- name: "Add git PPA"
+  apt_repository: "repo='ppa:git-core/ppa' update_cache=yes"
 
-- name: "Create hackbox user"
-  user: "name=hackbox group=hackbox shell=/usr/bin/zsh"
+- name: "Install git latest"
+  apt: "pkg=git state=latest"
 
-- name: "Add hackbox to sudoers"
-  lineinfile: "dest=/etc/sudoers state=present line='hackbox ALL=(ALL) NOPASSWD: ALL'"
+- name: "Install dev tools"
+  apt: "pkg={{ item }} state=present"
+  with_items:
+      - "exuberant-ctags"
+      - "silversearcher-ag"
+      - "vim"
+      - "zsh"
 
-- name: "Copy root authorized_keys to hackbox user"
-  command: "cp -r /root/.ssh /home/hackbox/ creates=/home/hackbox/.ssh"
+- name: "Check tmux version"
+  command: "tmux -V"
+  register: "tmux_version"
+  changed_when: false
 
-- name: "Check permissions for hackbox ssh"
-  file: "path=/home/hackbox/.ssh state=directory recurse=yes owner=hackbox group=hackbox"
+- name: "Create {{ username }} group"
+  group: "name={{ username }} state=present"
+
+- name: "Create {{ username }} user"
+  user: "name={{ username }} group={{ username }} shell=/usr/bin/zsh"
+
+- name: "Add {{ username }} to sudoers"
+  lineinfile: "dest=/etc/sudoers state=present line='{{ username }} ALL=(ALL) NOPASSWD: ALL'"
+
+- name: "Create .ssh directory"
+  file: "path=/home/{{ username }}/apps state=directory owner={{ username }} group={{ username }} mode=0700"
+
+- name: "Add public key to authorized_keys"
+  lineinfile: "dest=/home/{{ username }}/.ssh/authorized_keys line={{ public_key }} state=present create=yes"
 
 - name: "Create apps directory"
-  file: "path=/home/hackbox/apps state=directory owner=hackbox group=hackbox"
+  file: "path=/home/{{ username }}/apps state=directory owner={{ username }} group={{ username }}"
 
 - name: "Clone dotfiles"
   git: "repo=https://github.com/jswinarton/dotfiles.git
-       dest=/home/hackbox/apps/dotfiles
+       dest=/home/{{ username }}/apps/dotfiles
        update=no"
   become: "yes"
-  become_user: "hackbox"
+  become_user: "{{ username }}"
 
 - name: "Symlink dotfiles"
-  command: "/home/hackbox/apps/dotfiles/setup/symlink_dotfiles.sh chdir=/home/hackbox/apps/dotfiles/setup creates=/home/hackbox/.commonrc"
+  command: "/home/{{ username }}/apps/dotfiles/setup/symlink_dotfiles.sh chdir=/home/{{ username }}/apps/dotfiles/setup creates=/home/{{ username }}/.commonrc"
   become: "yes"
-  become_user: "hackbox"
+  become_user: "{{ username }}"
 
 - name: "Clone oh-my-zsh"
   git: "repo=https://github.com/robbyrussell/oh-my-zsh.git
-       dest=/home/hackbox/.oh-my-zsh
+       dest=/home/{{ username }}/.oh-my-zsh
        update=no"
   become: "yes"
-  become_user: "hackbox"
+  become_user: "{{ username }}"
 
 - name: "Clone vundle"
   git: "repo=https://github.com/VundleVim/Vundle.vim.git
-       dest=/home/hackbox/.vim/bundle/Vundle.vim
+       dest=/home/{{ username }}/.vim/bundle/Vundle.vim
        update=no"
   become: "yes"
-  become_user: "hackbox"
+  become_user: "{{ username }}"
 
 - name: "Install vundle plugins"
-  command: "vim +PluginInstall +qall creates=/home/hackbox/.vim/bundle/ctrlp.vim"
+  command: "vim +PluginInstall +qall creates=/home/{{ username }}/.vim/bundle/ctrlp.vim"
   become: "yes"
-  become_user: "hackbox"
+  become_user: "{{ username }}"
 
