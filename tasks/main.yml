@@ -19,6 +19,21 @@
   register: "tmux_version"
   changed_when: false
 
+- name: "Install tmux build dependencies"
+  apt: "name=tmux state=build-dep"
+
+- name: "Download tmux"
+  get_url: "url=https://github.com/tmux/tmux/archive/2.1.zip dest=/tmp/tmux.zip"
+  when: "tmux_version != 'tmux 2.1'"
+
+- name: "Unarchive tmux zip"
+  unarchive: "src=/tmp/tmux.zip dest=/tmp copy=no"
+  when: "tmux_version != 'tmux 2.1'"
+
+- name: "Build tmux"
+  shell: "/bin/sh autogen.sh && /bin/sh configure && make && make install chdir=/tmp/tmux-2.1"
+  when: "tmux_version != 'tmux 2.1'"
+
 - name: "Create {{ username }} group"
   group: "name={{ username }} state=present"
 
