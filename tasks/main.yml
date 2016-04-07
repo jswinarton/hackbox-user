@@ -21,7 +21,7 @@
   changed_when: false
 
 - name: "Install tmux build dependencies"
-  apt: "name=tmux state=build-dep"
+  apt: "name=tmux state=build-dep update_cache=true"
 
 - name: "Download tmux"
   get_url: "url=https://github.com/tmux/tmux/archive/2.1.zip dest=/tmp/tmux.zip"
