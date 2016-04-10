@@ -9,8 +9,9 @@
   apt: "pkg={{ item }} state=present"
   with_items:
       - "exuberant-ctags"
-      - "silversearcher-ag"
       - "ruby"
+      - "silversearcher-ag"
+      - "sqlite3"
       - "unzip"
       - "vim"
       - "zsh"
