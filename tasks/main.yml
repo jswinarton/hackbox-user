@@ -24,16 +24,16 @@
   apt: "name=tmux state=build-dep update_cache=true"
 
 - name: "Download tmux"
-  get_url: "url=https://github.com/tmux/tmux/archive/2.1.zip dest=/tmp/tmux.zip"
-  when: "tmux_version != 'tmux 2.1'"
+  get_url: "url=https://github.com/tmux/tmux/archive/2.2.zip dest=/tmp/tmux.zip"
+  when: "tmux_version != 'tmux 2.2'"
 
 - name: "Unarchive tmux zip"
   unarchive: "src=/tmp/tmux.zip dest=/tmp copy=no"
-  when: "tmux_version != 'tmux 2.1'"
+  when: "tmux_version != 'tmux 2.2'"
 
 - name: "Build tmux"
-  shell: "/bin/sh autogen.sh && /bin/sh configure && make && make install chdir=/tmp/tmux-2.1"
-  when: "tmux_version != 'tmux 2.1'"
+  shell: "/bin/sh autogen.sh && /bin/sh configure && make && make install chdir=/tmp/tmux-2.2"
+  when: "tmux_version != 'tmux 2.2'"
 
 - name: "Create {{ username }} group"
   group: "name={{ username }} state=present"
