@@ -9,8 +9,9 @@
   apt: "pkg={{ item }} state=present"
   with_items:
       - "exuberant-ctags"
-      - "silversearcher-ag"
       - "ruby"
+      - "silversearcher-ag"
+      - "sqlite3"
       - "unzip"
       - "vim"
       - "zsh"
@@ -45,7 +46,7 @@
   lineinfile: "dest=/etc/sudoers state=present line='{{ username }} ALL=(ALL) NOPASSWD: ALL'"
 
 - name: "Create .ssh directory"
-  file: "path=/home/{{ username }}/apps state=directory owner={{ username }} group={{ username }} mode=0700"
+  file: "path=/home/{{ username }}/.ssh state=directory owner={{ username }} group={{ username }} mode=0700"
 
 - name: "Add public key to authorized_keys"
   lineinfile: "dest=/home/{{ username }}/.ssh/authorized_keys line={{ public_key }} state=present create=yes"
