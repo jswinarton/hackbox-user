@@ -62,7 +62,7 @@
   become_user: "{{ username }}"
 
 - name: "Symlink dotfiles"
-  command: "/home/{{ username }}/apps/dotfiles/setup/symlink_dotfiles.sh chdir=/home/{{ username }}/apps/dotfiles/setup creates=/home/{{ username }}/.commonrc"
+  command: "/home/{{ username }}/apps/dotfiles/etc/symlink_dotfiles.sh chdir=/home/{{ username }}/apps/dotfiles/etc creates=/home/{{ username }}/.commonrc"
   become: "yes"
   become_user: "{{ username }}"
 
