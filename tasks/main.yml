@@ -30,6 +30,10 @@
       - "zsh"
   become: "yes"
 
+- name: "Create '{{ username }}' username with zsh as default shell"
+  user: "name={{ username }} shell=/usr/bin/zsh"
+  become: "yes"
+
 - name: "Check tmux version"
   command: "tmux -V"
   register: "tmux_version"
@@ -74,10 +78,6 @@
        update=no"
   become: "yes"
   become_user: "{{ username }}"
-
-- name: "Set zsh as default shell"
-  user: "name={{ username }} shell=/usr/bin/zsh"
-  become: "yes"
 
 - name: "Clone vundle"
   git: "repo=https://github.com/VundleVim/Vundle.vim.git

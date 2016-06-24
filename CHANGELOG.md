@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This changelog follows the format at [keepachangelog.com](http://keepachangelog.com/).
 
+## [0.1.2] - 2016-06=24
+### Changed
+- Moved the user creation step up to make sure it exists before creating files underneath the user's home folder.
+
 ## [0.1.1] - 2016-06-24
 ### Added
 - Added locale generation.
