@@ -1,4 +1,14 @@
 ---
+
+- name: "Generate locales"
+  locale_gen: "name={{ item }} state=present"
+  with_items:
+    - "en_US"
+    - "en_US.UTF-8"
+    - "en_CA"
+    - "en_CA.UTF-8"
+  become: "yes"
+
 - name: "Add git PPA"
   apt_repository: "repo='ppa:git-core/ppa' update_cache=yes"
   become: "yes"
@@ -75,9 +85,3 @@
        update=no"
   become: "yes"
   become_user: "{{ username }}"
-
-- name: "Install vundle plugins"
-  command: "vim +PluginInstall +qall creates=/home/{{ username }}/.vim/bundle/ctrlp.vim"
-  become: "yes"
-  become_user: "{{ username }}"
-
