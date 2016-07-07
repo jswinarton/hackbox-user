@@ -2,7 +2,11 @@
 All notable changes to this project will be documented in this file.
 This changelog follows the format at [keepachangelog.com](http://keepachangelog.com/).
 
-## [0.1.2] - 2016-06=24
+## [0.1.3] - 2016-07-07
+## Added
+- Added an option to change the system hostname. Useful when injecting this role into someone else's vagrant box.
+
+## [0.1.2] - 2016-06-24
 ### Changed
 - Moved the user creation step up to make sure it exists before creating files underneath the user's home folder.
 

@@ -9,5 +9,5 @@ Example Playbook
 
     - hosts: servers
       roles:
-         - { role: jswinarton.hackbox-user, username: 'jeremy' }
+         - { role: "hackbox-user", username: "jeremy" }
 

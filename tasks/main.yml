@@ -1,5 +1,10 @@
 ---
 
+- name: "Set system hostname"
+  hostname: "name={{ hostname }}"
+  become: "yes"
+  when: hostname != ""
+
 - name: "Generate locales"
   locale_gen: "name={{ item }} state=present"
   with_items:
