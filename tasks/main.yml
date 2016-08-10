@@ -1,92 +1,60 @@
 ---
-
-- name: "Set system hostname"
+- name: Set system hostname
   hostname: "name={{ hostname }}"
-  become: "yes"
+  become: yes
   when: hostname != ""
 
-- name: "Generate locales"
+- name: Generate locales
   locale_gen: "name={{ item }} state=present"
   with_items:
-    - "en_US"
-    - "en_US.UTF-8"
-    - "en_CA"
-    - "en_CA.UTF-8"
-  become: "yes"
+    - en_US
+    - en_US.UTF-8
+    - en_CA
+    - en_CA.UTF-8
+  become: yes
 
-- name: "Add git PPA"
-  apt_repository: "repo='ppa:git-core/ppa' update_cache=yes"
-  become: "yes"
+- name: Add git PPA
+  apt_repository: repo=ppa:git-core/ppa update_cache=yes
+  become: yes
 
-- name: "Install git latest"
-  apt: "pkg=git state=latest"
-  become: "yes"
+- name: Install git latest
+  apt: pkg=git state=latest
+  become: yes
 
-- name: "Install dev tools"
+- name: Install dev tools
   apt: "pkg={{ item }} state=present"
   with_items:
-      - "exuberant-ctags"
-      - "ruby"
-      - "silversearcher-ag"
-      - "sqlite3"
-      - "tree"
-      - "unzip"
-      - "vim"
-      - "zsh"
-  become: "yes"
+      - exuberant-ctags
+      - ruby
+      - silversearcher-ag
+      - sqlite3
+      - tree
+      - unzip
+      - vim
+      - zsh
+  become: yes
 
-- name: "Create '{{ username }}' username with zsh as default shell"
+- name: Create user with zsh as default shell
   user: "name={{ username }} shell=/usr/bin/zsh"
-  become: "yes"
+  become: yes
 
-- name: "Check tmux version"
-  command: "tmux -V"
-  register: "tmux_version"
-  changed_when: false
+- name: Add tmux PPA
+  apt_repository: repo=ppa:mpanella/tmux update_cache=yes
+  become: yes
 
-- name: "Install tmux build dependencies"
-  apt: "name=tmux state=build-dep update_cache=true"
-  become: "yes"
+- name: Install tmux latest
+  apt: pkg=tmux state=latest
+  become: yes
 
-- name: "Download tmux"
-  get_url: "url=https://github.com/tmux/tmux/archive/2.2.zip dest=/tmp/tmux.zip"
-  when: "tmux_version != 'tmux 2.2'"
-
-- name: "Unarchive tmux zip"
-  unarchive: "src=/tmp/tmux.zip dest=/tmp copy=no"
-  when: "tmux_version != 'tmux 2.2'"
-
-- name: "Build tmux"
-  shell: "/bin/sh autogen.sh && /bin/sh configure && make && make install chdir=/tmp/tmux-2.2"
-  when: "tmux_version != 'tmux 2.2'"
-  become: "yes"
-
-- name: "Create apps directory"
-  file: "path=/home/{{ username }}/apps state=directory owner={{ username }} group={{ username }}"
-  become: "yes"
-
-- name: "Clone dotfiles"
-  git: "repo=https://github.com/jswinarton/dotfiles.git
-       dest=/home/{{ username }}/apps/dotfiles
-       update=no"
-  become: "yes"
+- name: Clone dotfiles
+  git:
+    repo: https://github.com/jswinarton/dotfiles.git
+    dest: "/home/{{ username }}/apps/dotfiles"
+    update: no
+  become: yes
   become_user: "{{ username }}"
 
-- name: "Symlink dotfiles"
-  command: "/home/{{ username }}/apps/dotfiles/etc/symlink_dotfiles.sh chdir=/home/{{ username }}/apps/dotfiles/etc creates=/home/{{ username }}/.commonrc"
-  become: "yes"
-  become_user: "{{ username }}"
-
-- name: "Clone oh-my-zsh"
-  git: "repo=https://github.com/robbyrussell/oh-my-zsh.git
-       dest=/home/{{ username }}/.oh-my-zsh
-       update=no"
-  become: "yes"
-  become_user: "{{ username }}"
-
-- name: "Clone vundle"
-  git: "repo=https://github.com/VundleVim/Vundle.vim.git
-       dest=/home/{{ username }}/.vim/bundle/Vundle.vim
-       update=no"
-  become: "yes"
+- name: Setup dotfiles
+  command: "/home/{{ username }}/apps/dotfiles/etc/setup creates=/home/{{ username }}/.commonrc"
+  become: yes
   become_user: "{{ username }}"

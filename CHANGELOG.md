@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This changelog follows the format at [keepachangelog.com](http://keepachangelog.com/).
 
+## [0.2] - 2016-08-10
+## Changed
+- Replaced tmux build process with a PPA
+- Cleaned up YAML formatting (removed superfluous quotations)
+
+## Removed
+- Removed steps for cloning oh-my-zsh and Vundle (this is now handled by the dotfiles setup script)
+
 ## [0.1.3] - 2016-07-07
 ## Added
 - Added an option to change the system hostname. Useful when injecting this role into someone else's vagrant box.
