@@ -1,0 +1,32 @@
+---
+- name: Add git PPA
+  apt_repository: repo=ppa:git-core/ppa update_cache=yes
+  become: yes
+
+- name: Add tmux PPA
+  apt_repository: repo=ppa:mpanella/tmux update_cache=yes
+  become: yes
+
+- name: Install PPA tools
+  apt: "pkg={{ item }} state=latest"
+  with_items:
+    - git
+    - tmux
+  become: yes
+
+- name: Install dev tools
+  apt: "pkg={{ item }} state=present"
+  with_items:
+    - exuberant-ctags
+    - silversearcher-ag
+    - tree
+    - unzip
+    - vim
+    - zsh
+  become: yes
+
+- name: Set zsh as default shell for user
+  user: "name={{ username }} shell=/usr/bin/zsh"
+  become: yes
+
+
