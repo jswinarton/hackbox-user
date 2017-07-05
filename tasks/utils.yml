@@ -2,22 +2,34 @@
 - name: Add git PPA
   apt_repository: repo=ppa:git-core/ppa update_cache=yes
   become: yes
+  when: is_trusty
+
+- name: Install git
+  apt:
+    pkg: git
+    state: present
+  become: yes
+  when: is_trusty
 
 - name: Add tmux PPA
   apt_repository: repo=ppa:mpanella/tmux update_cache=yes
   become: yes
+  when: is_trusty
 
-- name: Install PPA tools
-  apt: "pkg={{ item }} state=latest"
-  with_items:
-    - git
-    - tmux
+- name: Install tmux
+  apt:
+    pkg: tmux
+    state: present
   become: yes
+  when: is_trusty
 
 - name: Install dev tools
   apt: "pkg={{ item }} state=present"
   with_items:
     - exuberant-ctags
+    - htop
+    - httpie
+    - jq
     - silversearcher-ag
     - tree
     - unzip

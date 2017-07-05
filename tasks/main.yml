@@ -12,7 +12,7 @@
     - en_CA
     - en_CA.UTF-8
   become: yes
-  when: generate_locales == true
+  when: is_trusty
 
 - name: Create user
   user: "name={{ username }}"
